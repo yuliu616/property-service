@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yu.modelMapper.PropertyMapper">
+  <sql id="propertyColumns">
+    ${alias}.version,
+    ${alias}.creation_date as creationDate,
+    ${alias}.last_updated as lastUpdated,
+    ${alias}.name,
+    ${alias}.is_active as isActive,
+    ${alias}.owner_id as ownerId,
+    ${alias}.ownership_date as ownershipDate,
+    ${alias}.geo_addr_latitude as geoAddrLatitude,
+    ${alias}.geo_addr_longitude as geoAddrLongitude,
+    ${alias}.addr_floor_line as addrFloorLine,
+    ${alias}.addr_block as addrBlock,
+    ${alias}.addr_street_address as addrStreetAddress,
+    ${alias}.addr_district as addrDistrict,
+    ${alias}.addr_area as addrArea,
+    ${alias}.addr_postal_code as addrPostalCode,
+    ${alias}.addr_city as addrCity,
+    ${alias}.addr_province as addrProvince,
+    ${alias}.addr_state as addrState,
+    ${alias}.addr_country_code as addrCountryCode</sql>
+  <select id="findPropertyById"
+          parameterType="String"
+          resultType="com.yu.model.property.Property">
+    SELECT id,
+    <include refid="propertyColumns">
+      <property name="alias" value="p" />
+    </include>
+    FROM ppy_property as p
+    WHERE p.id = #{id}
+  </select>
+  <select id="listAllProperty" resultType="com.yu.model.property.Property">
+    SELECT id,
+    <include refid="propertyColumns">
+      <property name="alias" value="p" />
+    </include>
+    FROM ppy_property as p
+    WHERE p.is_active = #{isActive}
+    LIMIT #{pageOffset},#{pageSize}
+  </select>
+  <select id="findAllPropertyWithName" resultType="com.yu.model.property.Property">
+    SELECT id,
+    <include refid="propertyColumns">
+      <property name="alias" value="p" />
+    </include>
+    FROM ppy_property as p
+    WHERE p.name = #{name}
+      and p.is_active = #{isActive}
+    LIMIT #{pageOffset},#{pageSize}
+  </select>
+  <insert id="generatePropertyId"
+          useGeneratedKeys="true"
+          keyProperty="id"
+          parameterType="com.yu.model.IntegerId">
+    insert into ppy_property_id values ()
+  </insert>
+  <insert id="insertPropertyWithModel"
+          parameterType="com.yu.model.property.Property">
+    insert ppy_property (id, version,
+      name,
+      is_active,
+      owner_id,
+      ownership_date,
+      geo_addr_latitude,
+      geo_addr_longitude,
+      addr_floor_line,
+      addr_block,
+      addr_street_address,
+      addr_district,
+      addr_area,
+      addr_postal_code,
+      addr_city,
+      addr_province,
+      addr_state,
+      addr_country_code)
+    values (#{p.id}, 1,
+      #{p.name},
+      #{p.isActive},
+      #{p.ownerId},
+      #{p.ownershipDate},
+      #{p.geoAddrLatitude},
+      #{p.geoAddrLongitude},
+      #{p.addrFloorLine},
+      #{p.addrBlock},
+      #{p.addrStreetAddress},
+      #{p.addrDistrict},
+      #{p.addrArea},
+      #{p.addrPostalCode},
+      #{p.addrCity},
+      #{p.addrProvince},
+      #{p.addrState},
+      #{p.addrCountryCode})
+  </insert>
+  <update id="updatePropertyWithModel"
+          parameterType="com.yu.model.property.Property">
+    update ppy_property
+    set version = version+1,
+      last_updated = CURRENT_TIMESTAMP,
+      name = #{p.name},
+      is_active = #{p.isActive},
+      owner_id = #{p.ownerId},
+      ownership_date = #{p.ownershipDate},
+      geo_addr_latitude = #{p.geoAddrLatitude},
+      geo_addr_longitude = #{p.geoAddrLongitude},
+      addr_floor_line = #{p.addrFloorLine},
+      addr_block = #{p.addrBlock},
+      addr_street_address = #{p.addrStreetAddress},
+      addr_district = #{p.addrDistrict},
+      addr_area = #{p.addrArea},
+      addr_postal_code = #{p.addrPostalCode},
+      addr_city = #{p.addrCity},
+      addr_province = #{p.addrProvince},
+      addr_state = #{p.addrState},
+      addr_country_code = #{p.addrCountryCode}
+    where id = #{p.id} and version = #{p.version}
+  </update>
+</mapper>

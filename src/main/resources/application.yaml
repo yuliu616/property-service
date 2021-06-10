@@ -1,0 +1,57 @@
+server.port: 8083
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://hellodb:3306/hellodb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&noAccessToProcedureBodies=true&allowPublicKeyRetrieval=true
+    username: ppy_dbuser
+    password: pass1234
+    hikari:
+      maximum-pool-size: 100
+
+auth-service:
+  jwt:
+    public-key-PEM:
+      -----BEGIN PUBLIC KEY-----
+      MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE+Ft3AzB+xBNaoBOYU0fj3+mAnrM+aYIA
+      8MVZV/s28qH6mGcUfrqGnKMu7t+EVmTP0f3RGOd6sO1AnhsqkLzCrQ==
+      -----END PUBLIC KEY-----
+
+property-service:
+  service-name: property-service
+  api-version: 1.0
+  api-base-url: /api
+  model-mapper-location: classpath:mapper/*-Mapper.xml
+  options:
+    enable-debug-endpoint: true
+    accept-expired-auth-token: true
+  role-permission-config:
+    permission-map:
+      ROOT_ADMIN:
+      - BASIC
+      - ANYTHING
+      GENERAL_USER:
+      - BASIC
+      - PROPERTY_GET
+      PROPERTY_ADMIN:
+      - BASIC
+      - PROPERTY_GET
+      - PROPERTY_SEARCH
+      - PROPERTY_ADD
+      - PROPERTY_UPDATE
+      - PROPERTY_DELETE
+
+
+---
+spring:
+  profiles: production
+  datasource:
+    username: pdt_dbuser
+    password: <YOUR_DB_PASSWORD>
+property-service:
+  options:
+    enable-debug-endpoint: false
+    accept-expired-auth-token: false
+auth-service:
+  jwt:
+    public-key-PEM:
+      <YOUR PUBLIC KEY>
