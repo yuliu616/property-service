@@ -23,6 +23,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${property-service.options.enable-debug-endpoint}")
     protected boolean enableDebugEndpoint;
 
+    @Value("${property-service.options.disable-permission-check}")
+    protected boolean disablePermissionCheck;
+
     private static final Logger logger = LoggerFactory.getLogger(AppSecurityConfig.class);
 
     @Override
@@ -40,23 +43,27 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         }
 
         // access control for endpoints
-        http
-            .authorizeRequests()
-                .antMatchers(apiBaseUrl+"/about")
-                    .permitAll()
+        if (disablePermissionCheck) {
+            logger.warn("app started with disablePermissionCheck.");
+            http.authorizeRequests().anyRequest().permitAll();
+        } else {
+            http
+                .authorizeRequests()
+                    .antMatchers(apiBaseUrl+"/about")
+                        .permitAll()
 
-                .antMatchers(HttpMethod.GET, apiBaseUrl+"/property")
-                    .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_SEARCH.name())
-                .antMatchers(HttpMethod.POST, apiBaseUrl+"/property")
-                    .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_ADD.name())
-                .antMatchers(HttpMethod.GET, apiBaseUrl+"/property/*")
-                    .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_GET.name())
-                .antMatchers(HttpMethod.PUT, apiBaseUrl+"/property/*")
-                   .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_UPDATE.name())
+                    .antMatchers(HttpMethod.GET, apiBaseUrl+"/property")
+                        .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_SEARCH.name())
+                    .antMatchers(HttpMethod.POST, apiBaseUrl+"/property")
+                        .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_ADD.name())
+                    .antMatchers(HttpMethod.GET, apiBaseUrl+"/property/*")
+                        .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_GET.name())
+                    .antMatchers(HttpMethod.PUT, apiBaseUrl+"/property/*")
+                       .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_UPDATE.name())
 
-                .anyRequest().denyAll()
-        ;
-//        http.authorizeRequests().anyRequest().permitAll();
+                    .anyRequest().denyAll()
+            ;
+        }
 
         http.addFilterBefore(new JwtTokenBasedSecurityFilter(), UsernamePasswordAuthenticationFilter.class);
     }
