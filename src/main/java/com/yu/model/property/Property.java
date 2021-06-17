@@ -22,6 +22,7 @@ public class Property implements IHasId {
 
     private boolean isActive;
 
+    @NotBlank
     private String ownerId;
 
     private LocalDate ownershipDate;
