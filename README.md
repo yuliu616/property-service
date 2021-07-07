@@ -60,7 +60,7 @@ java -jar target/property-service-1.0.0.jar
 ## Health checking
 
 ```
-curl 'http://127.0.0.1:8083/api/about'
+curl 'http://127.0.0.1:8083/api/1.0/about'
 ```
 
 # Docker support
