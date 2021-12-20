@@ -57,6 +57,17 @@ public class PropertyController {
         return new CountDto(this.propertyMapper.countAllProperty(isActive));
     }
 
+    @GetMapping("/search/byName")
+    public List<Property> findAllBrandWithNamePattern(
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "offset", defaultValue = "0") long offset,
+            @RequestParam(value = "size", defaultValue = "10") long size
+    ){
+        long safePageSize = Math.max(Math.min(size, PAGE_SIZE_SAFE_LIMIT), PAGE_SIZE_MIN);
+        return this.propertyMapper.findAllPropertyWithName(name,
+                true, offset, safePageSize);
+    }
+
     @Transactional
     @PostMapping("")
     public Property createProperty(@RequestBody @Valid Property property){

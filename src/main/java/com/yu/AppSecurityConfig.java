@@ -62,6 +62,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                         .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_ADD.name())
                     .antMatchers(HttpMethod.GET, apiBaseUrl+"/property/count")
                         .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_SEARCH.name())
+                    .antMatchers(HttpMethod.GET, apiBaseUrl+"/property/search/byName")
+                        .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_SEARCH.name())
                     .antMatchers(HttpMethod.GET, apiBaseUrl+"/property/*")
                         .hasAnyAuthority(Permission.ANYTHING.name(), Permission.PROPERTY_GET.name())
                     .antMatchers(HttpMethod.PUT, apiBaseUrl+"/property/*")

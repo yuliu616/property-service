@@ -115,6 +115,20 @@ baseUri: http://localhost:8083/api/1.0
           body:
             application/json:
               type: CountDto
+  /search:
+    /byName:
+      get:
+        description: |
+          list all Properties with provided name.
+        queryParameters:
+          name: string
+          offset: integer
+          size: integer
+        responses:
+          200:
+            body:
+              application/json:
+                type: Property[]
   /{id}:
     get:
       description: |
