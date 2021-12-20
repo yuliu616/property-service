@@ -28,28 +28,28 @@
           resultType="com.yu.model.property.Property">
     SELECT id,
     <include refid="propertyColumns">
-      <property name="alias" value="p" />
+      <property name="alias" value="it" />
     </include>
-    FROM ppy_property as p
-    WHERE p.id = #{id}
+    FROM ppy_property as it
+    WHERE it.id = #{id}
   </select>
   <select id="listAllProperty" resultType="com.yu.model.property.Property">
     SELECT id,
     <include refid="propertyColumns">
-      <property name="alias" value="p" />
+      <property name="alias" value="it" />
     </include>
-    FROM ppy_property as p
-    WHERE p.is_active = #{isActive}
+    FROM ppy_property as it
+    WHERE it.is_active = #{isActive}
     LIMIT #{pageOffset},#{pageSize}
   </select>
   <select id="findAllPropertyWithName" resultType="com.yu.model.property.Property">
     SELECT id,
     <include refid="propertyColumns">
-      <property name="alias" value="p" />
+      <property name="alias" value="it" />
     </include>
-    FROM ppy_property as p
-    WHERE p.name = #{name}
-      and p.is_active = #{isActive}
+    FROM ppy_property as it
+    WHERE it.name = #{name}
+      and it.is_active = #{isActive}
     LIMIT #{pageOffset},#{pageSize}
   </select>
   <insert id="generatePropertyId"
@@ -77,45 +77,45 @@
       addr_province,
       addr_state,
       addr_country_code)
-    values (#{p.id}, 1,
-      #{p.name},
-      #{p.isActive},
-      #{p.ownerId},
-      #{p.ownershipDate},
-      #{p.geoAddrLatitude},
-      #{p.geoAddrLongitude},
-      #{p.addrFloorLine},
-      #{p.addrBlock},
-      #{p.addrStreetAddress},
-      #{p.addrDistrict},
-      #{p.addrArea},
-      #{p.addrPostalCode},
-      #{p.addrCity},
-      #{p.addrProvince},
-      #{p.addrState},
-      #{p.addrCountryCode})
+    values (#{it.id}, 1,
+      #{it.name},
+      #{it.isActive},
+      #{it.ownerId},
+      #{it.ownershipDate},
+      #{it.geoAddrLatitude},
+      #{it.geoAddrLongitude},
+      #{it.addrFloorLine},
+      #{it.addrBlock},
+      #{it.addrStreetAddress},
+      #{it.addrDistrict},
+      #{it.addrArea},
+      #{it.addrPostalCode},
+      #{it.addrCity},
+      #{it.addrProvince},
+      #{it.addrState},
+      #{it.addrCountryCode})
   </insert>
   <update id="updatePropertyWithModel"
           parameterType="com.yu.model.property.Property">
     update ppy_property
     set version = version+1,
       last_updated = CURRENT_TIMESTAMP,
-      name = #{p.name},
-      is_active = #{p.isActive},
-      owner_id = #{p.ownerId},
-      ownership_date = #{p.ownershipDate},
-      geo_addr_latitude = #{p.geoAddrLatitude},
-      geo_addr_longitude = #{p.geoAddrLongitude},
-      addr_floor_line = #{p.addrFloorLine},
-      addr_block = #{p.addrBlock},
-      addr_street_address = #{p.addrStreetAddress},
-      addr_district = #{p.addrDistrict},
-      addr_area = #{p.addrArea},
-      addr_postal_code = #{p.addrPostalCode},
-      addr_city = #{p.addrCity},
-      addr_province = #{p.addrProvince},
-      addr_state = #{p.addrState},
-      addr_country_code = #{p.addrCountryCode}
-    where id = #{p.id} and version = #{p.version}
+      name = #{it.name},
+      is_active = #{it.isActive},
+      owner_id = #{it.ownerId},
+      ownership_date = #{it.ownershipDate},
+      geo_addr_latitude = #{it.geoAddrLatitude},
+      geo_addr_longitude = #{it.geoAddrLongitude},
+      addr_floor_line = #{it.addrFloorLine},
+      addr_block = #{it.addrBlock},
+      addr_street_address = #{it.addrStreetAddress},
+      addr_district = #{it.addrDistrict},
+      addr_area = #{it.addrArea},
+      addr_postal_code = #{it.addrPostalCode},
+      addr_city = #{it.addrCity},
+      addr_province = #{it.addrProvince},
+      addr_state = #{it.addrState},
+      addr_country_code = #{it.addrCountryCode}
+    where id = #{it.id} and version = #{it.version}
   </update>
 </mapper>

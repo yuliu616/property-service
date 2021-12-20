@@ -15,9 +15,9 @@ public interface PropertyMapper {
 
     long generatePropertyId(@Param("o") IntegerId integerId);
 
-    long insertPropertyWithModel(@Param("p") Property property);
+    long insertPropertyWithModel(@Param("it") Property property);
 
-    long updatePropertyWithModel(@Param("p") Property property);
+    long updatePropertyWithModel(@Param("it") Property property);
 
     List<Property> listAllProperty(
             @Param("isActive") boolean isActive,
