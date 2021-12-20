@@ -5,12 +5,18 @@ import com.yu.exception.RecordInsertionFailException;
 import com.yu.exception.RecordModificationFailException;
 import com.yu.model.dto.CountDto;
 import com.yu.model.property.Property;
+import com.yu.model.dto.ErrorCodeDto;
+import com.yu.model.people.People;
 import com.yu.modelMapper.PropertyMapper;
+import com.yu.service.PeopleService;
+import com.yu.util.FeignUtil;
 import com.yu.util.MyBatisUtil;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +40,9 @@ public class PropertyController {
 
     @Autowired
     protected IdGenerationController idGenerationController;
+
+    @Autowired
+    protected PeopleService peopleService;
 
     private static final long PAGE_SIZE_MIN = 1;
     private static final long PAGE_SIZE_SAFE_LIMIT = 1000;
@@ -122,6 +131,7 @@ public class PropertyController {
     @Transactional
     @PostMapping("")
     public Property createProperty(@RequestBody @Valid Property property){
+        checkOwnerExists(property);
         Property newRecord = idGenerationController.fillWithGeneratedId(property);
         newRecord.setActive(true); // user is active by default
         long created = this.propertyMapper.insertPropertyWithModel(newRecord);
@@ -139,12 +149,32 @@ public class PropertyController {
         if (!id.equals(property.getId())) {
             throw new InconsistencyDataException();
         }
+        checkOwnerExists(property);
 
         long affected = this.propertyMapper.updatePropertyWithModel(property);
         if (affected <= 0) {
             throw new RecordModificationFailException();
         }
         return this.propertyMapper.findPropertyById(id);
+    }
+
+    /**
+     * ensure owner of property exists
+     * (throw exception if not exists)
+     */
+    private void checkOwnerExists(Property property) throws ValidationException {
+        if (StringUtils.isEmpty(property.getOwnerId())) {
+            throw new ValidationException("owner missing");
+        }
+        try {
+            People owner = this.peopleService.findPeopleById(property.getOwnerId());
+            logger.debug("owner is: {}:{},{}", owner.getId(), owner.getFirstName(), owner.getLastName());
+        } catch (FeignException feignException) {
+            ErrorCodeDto error = FeignUtil.convertFeignException(feignException);
+            if (error.getErrorCode().equals(GlobalExceptionHandler.ERROR_RECORD_NOT_FOUND)) {
+                throw new ValidationException("owner not exist");
+            }
+        }
     }
 
 }
