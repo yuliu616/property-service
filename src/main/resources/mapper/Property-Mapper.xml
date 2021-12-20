@@ -40,6 +40,12 @@
     </include>
     FROM ppy_property as it
     WHERE (#{isActive} = -1 or it.is_active = #{isActive})
+      AND (#{idMin} is null or it.id >= #{idMin})
+      AND (#{idMax} is null or it.id &lt; #{idMax})
+      AND (#{creationDateMin} is null or it.creation_date >= #{creationDateMin})
+      AND (#{creationDateMax} is null or it.creation_date &lt; #{creationDateMax})
+      AND (#{lastUpdatedMin} is null or it.last_updated >= #{lastUpdatedMin})
+      AND (#{lastUpdatedMax} is null or it.last_updated &lt; #{lastUpdatedMax})
     ORDER BY it.id desc
     LIMIT #{pageOffset},#{pageSize}
   </select>
@@ -47,6 +53,12 @@
     SELECT count(*)
     FROM ppy_property as it
     WHERE (#{isActive} = -1 or it.is_active = #{isActive})
+      AND (#{idMin} is null or it.id >= #{idMin})
+      AND (#{idMax} is null or it.id &lt; #{idMax})
+      AND (#{creationDateMin} is null or it.creation_date >= #{creationDateMin})
+      AND (#{creationDateMax} is null or it.creation_date &lt; #{creationDateMax})
+      AND (#{lastUpdatedMin} is null or it.last_updated >= #{lastUpdatedMin})
+      AND (#{lastUpdatedMax} is null or it.last_updated &lt; #{lastUpdatedMax})
   </select>
   <select id="findAllPropertyWithName" resultType="com.yu.model.property.Property">
     SELECT id,
@@ -56,6 +68,12 @@
     FROM ppy_property as it
     WHERE it.name = #{name}
       and it.is_active = #{isActive}
+      AND (#{idMin} is null or it.id >= #{idMin})
+      AND (#{idMax} is null or it.id &lt; #{idMax})
+      AND (#{creationDateMin} is null or it.creation_date >= #{creationDateMin})
+      AND (#{creationDateMax} is null or it.creation_date &lt; #{creationDateMax})
+      AND (#{lastUpdatedMin} is null or it.last_updated >= #{lastUpdatedMin})
+      AND (#{lastUpdatedMax} is null or it.last_updated &lt; #{lastUpdatedMax})
     ORDER BY it.id desc
     LIMIT #{pageOffset},#{pageSize}
   </select>

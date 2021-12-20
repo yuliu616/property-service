@@ -285,7 +285,12 @@ describe('property', function(){
 
   it('could list many record', async function(){
     // query property with paging
-    let res = await axios.get(`${apiBaseUrl}/property`);
+    let res = await axios.get(`${apiBaseUrl}/property`, {
+      params: {
+        idMin: '24001',
+        idMax: '24021',
+      },
+    });
     expect(res.data).is.an('array');
     expect(res.data).to.have.length.at.least(6);
     expect(res.data[0]).is.an('object');
@@ -304,7 +309,14 @@ describe('property', function(){
 
   it('could list record as specific page size 2', async function(){
     // query property with paging
-    let res = await axios.get(`${apiBaseUrl}/property?size=2`);
+    let res = await axios.get(`${apiBaseUrl}/property`, {
+      params: {
+        offset: 0,
+        size: 2,
+        idMin: '24001',
+        idMax: '24021',
+      },
+    });
     expect(res.data).is.an('array');
     expect(res.data).to.have.length(2);
     expect(res.data[0]).is.an('object');
@@ -313,7 +325,14 @@ describe('property', function(){
 
   it('could list record as specific page size', async function(){
     // query property with paging
-    let res = await axios.get(`${apiBaseUrl}/property?size=5`);
+    let res = await axios.get(`${apiBaseUrl}/property`, {
+      params: {
+        offset: 0,
+        size: 5,
+        idMin: '24001',
+        idMax: '24021',
+      },
+    });
     expect(res.data).is.an('array');
     expect(res.data).to.have.length(5);
     expect(res.data[0]).is.an('object');
@@ -322,13 +341,75 @@ describe('property', function(){
 
   it('could list record as specific page offset', async function(){
     // query property with paging
-    let res = await axios.get(`${apiBaseUrl}/property?offset=4&size=2`);
+    let res = await axios.get(`${apiBaseUrl}/property`, {
+      params: {
+        offset: 4,
+        size: 2,
+        idMin: '24001',
+        idMax: '24021',
+      },
+    });
     expect(res.data).is.an('array');
     expect(res.data).to.have.length(2);
     expect(res.data[0]).is.an('object');
     expect(res.data[1]).is.an('object');
-    expect(res.data[0].id).eq('24005');
-    expect(res.data[1].id).eq('24006');
+    expect(res.data[0].id).eq('24016');
+    expect(res.data[1].id).eq('24015');
+  });
+
+  it('could list with creation date range', async function(){
+    // query property with paging
+    let res = await axios.get(`${apiBaseUrl}/property`, {
+      params: {
+        size: 100,
+        idMin: '24001',
+        idMax: '24021',
+        creationDateMin: '2020-07-10T00:00:00Z',
+        creationDateMax: '2020-07-25T22:30:00Z',
+      },
+    });
+    expect(res.data).is.an('array');
+    expect(res.data).to.have.length(7);
+    expect(res.data[0]).is.an('object');
+    expect(res.data[1]).is.an('object');
+    expect(res.data[0].id).equals('24016');
+    expect(res.data[1].id).equals('24015');
+  });
+
+  it('could list with last update date range', async function(){
+    // query property with paging
+    let res = await axios.get(`${apiBaseUrl}/property`, {
+      params: {
+        size: 100,
+        idMin: '24001',
+        idMax: '24021',
+        lastUpdatedMin: '2020-07-30T03:00:00Z',
+        lastUpdatedMax: '2020-07-30T23:50:59Z',
+      },
+    });
+    expect(res.data).is.an('array');
+    expect(res.data).to.have.length(4);
+    expect(res.data[0]).is.an('object');
+    expect(res.data[1]).is.an('object');
+    expect(res.data[0].id).equals('24019');
+    expect(res.data[1].id).equals('24018');
+  });
+
+  it('could list with id range', async function(){
+    // query property with paging
+    let res = await axios.get(`${apiBaseUrl}/property`, {
+      params: {
+        size: 100,
+        idMin: '24001',
+        idMax: '24021',
+      },
+    });
+    expect(res.data).is.an('array');
+    expect(res.data).to.have.length(20);
+    expect(res.data[0]).is.an('object');
+    expect(res.data[1]).is.an('object');
+    expect(res.data[0].id).equals('24020');
+    expect(res.data[1].id).equals('24019');
   });
 
   it('could count all records', async function(){
@@ -336,6 +417,46 @@ describe('property', function(){
     let res = await axios.get(`${apiBaseUrl}/property/count`);
     expect(res.data).is.an('object');
     expect(res.data.count).at.least(10);
+  });
+
+  it('could count records with creation date range', async function(){
+    // count records
+    let res = await axios.get(`${apiBaseUrl}/property/count`, {
+      params: {
+        idMin: '24001',
+        idMax: '24021',
+        creationDateMin: '2020-07-10T00:00:00Z',
+        creationDateMax: '2020-07-25T22:30:00Z',
+      },
+    });
+    expect(res.data).is.an('object');
+    expect(res.data.count).equals(7);
+  });
+
+  it('could count records with last update date range', async function(){
+    // count records
+    let res = await axios.get(`${apiBaseUrl}/property/count`, {
+      params: {
+        idMin: '24001',
+        idMax: '24021',
+        lastUpdatedMin: '2020-07-30T03:00:00Z',
+        lastUpdatedMax: '2020-07-30T23:50:59Z',
+      },
+    });
+    expect(res.data).is.an('object');
+    expect(res.data.count).equals(4);
+  });
+
+  it('could count records with id range', async function(){
+    // count records
+    let res = await axios.get(`${apiBaseUrl}/property/count`, {
+      params: {
+        idMin: '24001',
+        idMax: '24021',
+      },
+    });
+    expect(res.data).is.an('object');
+    expect(res.data.count).equals(20);
   });
 
   it('could count inactive records', async function(){

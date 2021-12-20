@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
+import java.time.Instant;
 import java.util.List;
 
 @RequestMapping("${property-service.api-base-url}/property")
@@ -35,6 +37,7 @@ public class PropertyController {
 
     private static final long PAGE_SIZE_MIN = 1;
     private static final long PAGE_SIZE_SAFE_LIMIT = 1000;
+    private static final long PAGE_OFFSET_SAFE_LIMIT = 1000;
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyController.class);
 
@@ -47,28 +50,73 @@ public class PropertyController {
     public List<Property> listAllProperty(
             @RequestParam(value = "offset", defaultValue = "0") long offset,
             @RequestParam(value = "size", defaultValue = "10") long size,
+            @RequestParam(value = "idMin", required = false) String idMin,
+            @RequestParam(value = "idMax", required = false) String idMax,
+            @RequestParam(value = "creationDateMin", required = false)
+                    Instant creationDateMin,
+            @RequestParam(value = "creationDateMax", required = false)
+                    Instant creationDateMax,
+            @RequestParam(value = "lastUpdatedMin", required = false)
+                    Instant lastUpdatedMin,
+            @RequestParam(value = "lastUpdatedMax", required = false)
+                    Instant lastUpdatedMax,
             @RequestParam(value = "isActive", defaultValue = "1") int isActive
     ){
         long safePageSize = Math.max(Math.min(size, PAGE_SIZE_SAFE_LIMIT), PAGE_SIZE_MIN);
-        return this.propertyMapper.listAllProperty(isActive, offset, safePageSize);
+        if (offset > PAGE_OFFSET_SAFE_LIMIT) {
+            throw new ValidationException("offset too large");
+        }
+        return this.propertyMapper.listAllProperty(isActive, idMin, idMax,
+                creationDateMin, creationDateMax,
+                lastUpdatedMin, lastUpdatedMax,
+                offset, safePageSize);
     }
 
     @GetMapping("/count")
     public CountDto countAllProperty(
+            @RequestParam(value = "idMin", required = false) String idMin,
+            @RequestParam(value = "idMax", required = false) String idMax,
+            @RequestParam(value = "creationDateMin", required = false)
+                    Instant creationDateMin,
+            @RequestParam(value = "creationDateMax", required = false)
+                    Instant creationDateMax,
+            @RequestParam(value = "lastUpdatedMin", required = false)
+                    Instant lastUpdatedMin,
+            @RequestParam(value = "lastUpdatedMax", required = false)
+                    Instant lastUpdatedMax,
             @RequestParam(value = "isActive", defaultValue = "1") int isActive
     ){
-        return new CountDto(this.propertyMapper.countAllProperty(isActive));
+        return new CountDto(this.propertyMapper.countAllProperty(isActive, idMin, idMax,
+                creationDateMin, creationDateMax,
+                lastUpdatedMin, lastUpdatedMax));
     }
 
     @GetMapping("/search/byName")
     public List<Property> findAllBrandWithNamePattern(
             @RequestParam(value = "name") String name,
             @RequestParam(value = "offset", defaultValue = "0") long offset,
-            @RequestParam(value = "size", defaultValue = "10") long size
+            @RequestParam(value = "size", defaultValue = "10") long size,
+            @RequestParam(value = "idMin", required = false) String idMin,
+            @RequestParam(value = "idMax", required = false) String idMax,
+            @RequestParam(value = "creationDateMin", required = false)
+                    Instant creationDateMin,
+            @RequestParam(value = "creationDateMax", required = false)
+                    Instant creationDateMax,
+            @RequestParam(value = "lastUpdatedMin", required = false)
+                    Instant lastUpdatedMin,
+            @RequestParam(value = "lastUpdatedMax", required = false)
+                    Instant lastUpdatedMax
     ){
         long safePageSize = Math.max(Math.min(size, PAGE_SIZE_SAFE_LIMIT), PAGE_SIZE_MIN);
-        return this.propertyMapper.findAllPropertyWithName(name,
-                true, offset, safePageSize);
+        if (offset > PAGE_OFFSET_SAFE_LIMIT) {
+            throw new ValidationException("offset too large");
+        }
+        return this.propertyMapper.findAllPropertyWithName(
+                name, true,
+                idMin, idMax,
+                creationDateMin, creationDateMax,
+                lastUpdatedMin, lastUpdatedMax,
+                offset, safePageSize);
     }
 
     @Transactional

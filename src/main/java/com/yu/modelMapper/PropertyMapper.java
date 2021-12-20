@@ -4,6 +4,7 @@ import com.yu.model.IntegerId;
 import com.yu.model.property.Property;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -26,8 +27,15 @@ public interface PropertyMapper {
      */
     List<Property> listAllProperty(
             @Param("isActive") int isActive,
+            @Param("idMin") String idMin,
+            @Param("idMax") String idMax,
+            @Param("creationDateMin") Instant creationDateMin,
+            @Param("creationDateMax") Instant creationDateMax,
+            @Param("lastUpdatedMin") Instant lastUpdatedMin,
+            @Param("lastUpdatedMax") Instant lastUpdatedMax,
             @Param("pageOffset") long pageOffset,
-            @Param("pageSize") long pageSize);
+            @Param("pageSize") long pageSize
+    );
 
     /**
      * @param isActive "0" for false,
@@ -35,12 +43,26 @@ public interface PropertyMapper {
      *                 "-1" for anything.
      */
     long countAllProperty(
-            @Param("isActive") int isActive);
+            @Param("isActive") int isActive,
+            @Param("idMin") String idMin,
+            @Param("idMax") String idMax,
+            @Param("creationDateMin") Instant creationDateMin,
+            @Param("creationDateMax") Instant creationDateMax,
+            @Param("lastUpdatedMin") Instant lastUpdatedMin,
+            @Param("lastUpdatedMax") Instant lastUpdatedMax
+    );
 
     List<Property> findAllPropertyWithName(
             @Param("name") String name,
             @Param("isActive") boolean isActive,
+            @Param("idMin") String idMin,
+            @Param("idMax") String idMax,
+            @Param("creationDateMin") Instant creationDateMin,
+            @Param("creationDateMax") Instant creationDateMax,
+            @Param("lastUpdatedMin") Instant lastUpdatedMin,
+            @Param("lastUpdatedMax") Instant lastUpdatedMax,
             @Param("pageOffset") long pageOffset,
-            @Param("pageSize") long pageSize);
+            @Param("pageSize") long pageSize
+    );
 
 }
