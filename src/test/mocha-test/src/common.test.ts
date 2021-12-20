@@ -11,7 +11,7 @@ let dateTimeNoZonePattern = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]
 let dateTimeAndMsNoZonePattern = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]*Z$/;
 let base64Pattern = /^[a-zA-Z0-9\/\+\=]+$/;
 
-let apiBaseUrl = 'http://127.0.0.1:8083/api/1.0';
+let apiBaseUrl = 'http://127.0.0.1:8083/api/1.1';
 // access token of ROOT_ADMIN that wont expired before year 2030.
 let access_token = 'eyJhbGciOiJFUzI1NksifQ.eyJpc3MiOiJjb20ueXUiLCJyb2xlIjpbIlJPT1RfQURNSU4iXSwiZXhwIjoxOTI1ODA3MTYxLCJ1c2VybmFtZSI6InVzZXIxMDAxIn0.zo7FhCEVhc5A8gBMDSmX06FgVtwbvsg5wEc8EJAJNMiksCsAoHEBCuzOrupk3kdcxVUsGg1Ig-nvHkQ5m7O-2g';
 
@@ -26,7 +26,11 @@ let options = {
 
 axios.interceptors.request.use(function(req) {
   if (options.echoReq == 'simple') {
-    console.debug(Colors.FgCyan, `     ${req.method.toUpperCase()} ${req.url.replace(apiBaseUrl, '')}`);
+    if (req.params && Object.keys(req.params).length > 0) {
+      console.debug(Colors.FgCyan, `     ${req.method.toUpperCase()} ${req.url.replace(apiBaseUrl, '')} qsParams=${JSON.stringify(req.params)}`);
+    } else {
+      console.debug(Colors.FgCyan, `     ${req.method.toUpperCase()} ${req.url.replace(apiBaseUrl, '')}`);
+    }
   }
   req.headers['authorization']=`Bearer ${access_token}`;
   return req;
