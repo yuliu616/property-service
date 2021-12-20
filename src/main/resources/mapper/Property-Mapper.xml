@@ -39,26 +39,62 @@
       <property name="alias" value="it" />
     </include>
     FROM ppy_property as it
-    WHERE (#{isActive} = -1 or it.is_active = #{isActive})
-      AND (#{idMin} is null or it.id >= #{idMin})
-      AND (#{idMax} is null or it.id &lt; #{idMax})
-      AND (#{creationDateMin} is null or it.creation_date >= #{creationDateMin})
-      AND (#{creationDateMax} is null or it.creation_date &lt; #{creationDateMax})
-      AND (#{lastUpdatedMin} is null or it.last_updated >= #{lastUpdatedMin})
-      AND (#{lastUpdatedMax} is null or it.last_updated &lt; #{lastUpdatedMax})
+    WHERE 1>0
+      <if test="isActive == 1">
+        AND it.is_active = 1
+      </if>
+      <if test="isActive == 0">
+        AND it.is_active = 0
+      </if>
+      <if test="idMin">
+        AND it.id >= #{idMin}
+      </if>
+      <if test="idMax">
+        AND it.id &lt; #{idMax}
+      </if>
+      <if test="creationDateMin">
+        AND it.creation_date >= #{creationDateMin}
+      </if>
+      <if test="creationDateMax">
+        AND it.creation_date &lt; #{creationDateMax}
+      </if>
+      <if test="lastUpdatedMin">
+        AND it.last_updated >= #{lastUpdatedMin}
+      </if>
+      <if test="lastUpdatedMax">
+        AND it.last_updated &lt; #{lastUpdatedMax}
+      </if>
     ORDER BY it.id desc
-    LIMIT #{pageOffset},#{pageSize}
+    LIMIT ${pageOffset},${pageSize}
   </select>
   <select id="countAllProperty" resultType="long">
     SELECT count(*)
     FROM ppy_property as it
-    WHERE (#{isActive} = -1 or it.is_active = #{isActive})
-      AND (#{idMin} is null or it.id >= #{idMin})
-      AND (#{idMax} is null or it.id &lt; #{idMax})
-      AND (#{creationDateMin} is null or it.creation_date >= #{creationDateMin})
-      AND (#{creationDateMax} is null or it.creation_date &lt; #{creationDateMax})
-      AND (#{lastUpdatedMin} is null or it.last_updated >= #{lastUpdatedMin})
-      AND (#{lastUpdatedMax} is null or it.last_updated &lt; #{lastUpdatedMax})
+    WHERE 1>0
+      <if test="isActive == 1">
+        AND it.is_active = 1
+      </if>
+      <if test="isActive == 0">
+        AND it.is_active = 0
+      </if>
+      <if test="idMin">
+        AND it.id >= #{idMin}
+      </if>
+      <if test="idMax">
+        AND it.id &lt; #{idMax}
+      </if>
+      <if test="creationDateMin">
+        AND it.creation_date >= #{creationDateMin}
+      </if>
+      <if test="creationDateMax">
+        AND it.creation_date &lt; #{creationDateMax}
+      </if>
+      <if test="lastUpdatedMin">
+        AND it.last_updated >= #{lastUpdatedMin}
+      </if>
+      <if test="lastUpdatedMax">
+        AND it.last_updated &lt; #{lastUpdatedMax}
+      </if>
   </select>
   <select id="findAllPropertyWithName" resultType="com.yu.model.property.Property">
     SELECT id,
@@ -66,16 +102,34 @@
       <property name="alias" value="it" />
     </include>
     FROM ppy_property as it
-    WHERE it.name = #{name}
-      and it.is_active = #{isActive}
-      AND (#{idMin} is null or it.id >= #{idMin})
-      AND (#{idMax} is null or it.id &lt; #{idMax})
-      AND (#{creationDateMin} is null or it.creation_date >= #{creationDateMin})
-      AND (#{creationDateMax} is null or it.creation_date &lt; #{creationDateMax})
-      AND (#{lastUpdatedMin} is null or it.last_updated >= #{lastUpdatedMin})
-      AND (#{lastUpdatedMax} is null or it.last_updated &lt; #{lastUpdatedMax})
+    WHERE 1>0
+      AND it.name = #{name}
+      <if test="isActive">
+        AND it.is_active = 1
+      </if>
+      <if test="!isActive">
+        AND it.is_active = 0
+      </if>
+      <if test="idMin">
+        AND it.id >= #{idMin}
+      </if>
+      <if test="idMax">
+        AND it.id &lt; #{idMax}
+      </if>
+      <if test="creationDateMin">
+        AND it.creation_date >= #{creationDateMin}
+      </if>
+      <if test="creationDateMax">
+        AND it.creation_date &lt; #{creationDateMax}
+      </if>
+      <if test="lastUpdatedMin">
+        AND it.last_updated >= #{lastUpdatedMin}
+      </if>
+      <if test="lastUpdatedMax">
+        AND it.last_updated &lt; #{lastUpdatedMax}
+      </if>
     ORDER BY it.id desc
-    LIMIT #{pageOffset},#{pageSize}
+    LIMIT ${pageOffset},${pageSize}
   </select>
   <insert id="generatePropertyId"
           useGeneratedKeys="true"
@@ -104,7 +158,8 @@
       addr_country_code)
     values (#{it.id}, 1,
       #{it.name},
-      #{it.isActive},
+      <if test="it.isActive">1</if>
+      <if test="!it.isActive">0</if>,
       #{it.ownerId},
       #{it.ownershipDate},
       #{it.geoAddrLatitude},
@@ -126,7 +181,9 @@
     set version = version+1,
       last_updated = CURRENT_TIMESTAMP,
       name = #{it.name},
-      is_active = #{it.isActive},
+      is_active =
+        <if test="it.isActive">1</if>
+        <if test="!it.isActive">0</if>,
       owner_id = #{it.ownerId},
       ownership_date = #{it.ownershipDate},
       geo_addr_latitude = #{it.geoAddrLatitude},
