@@ -30,6 +30,9 @@ public class PropertyController {
     @Autowired
     protected PropertyMapper propertyMapper;
 
+    @Autowired
+    protected IdGenerationController idGenerationController;
+
     private static final long PAGE_SIZE_MIN = 1;
     private static final long PAGE_SIZE_SAFE_LIMIT = 1000;
 
@@ -71,8 +74,7 @@ public class PropertyController {
     @Transactional
     @PostMapping("")
     public Property createProperty(@RequestBody @Valid Property property){
-        Property newRecord = MyBatisUtil.generateIdForModel(property,
-                o->this.propertyMapper.generatePropertyId(o));
+        Property newRecord = idGenerationController.fillWithGeneratedId(property);
         newRecord.setActive(true); // user is active by default
         long created = this.propertyMapper.insertPropertyWithModel(newRecord);
         if (created <= 0) {
