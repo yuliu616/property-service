@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `ppy_property`;
 
 CREATE TABLE `ppy_property` (
-  `id` varchar(32) NOT NULL,
+  `id` varchar(36) NOT NULL,
   `version` bigint(20) NOT NULL DEFAULT 1,
   `creation_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `last_updated` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -25,19 +25,22 @@ CREATE TABLE `ppy_property` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `ppy_property`
+ADD INDEX `ix_ppy_property_creation_date` (`creation_date` DESC);
+
+ALTER TABLE `ppy_property`
+ADD INDEX `ix_ppy_property_last_updated` (`last_updated` DESC);
+
+ALTER TABLE `ppy_property`
 ADD INDEX `ix_ppy_property_name` (`name` ASC);
 
 ALTER TABLE `ppy_property`
 ADD INDEX `ix_ppy_property_owner_id` (`owner_id` ASC);
 
 ALTER TABLE `ppy_property`
-ADD INDEX `ix_ppy_property_addr_city` (`addr_city` ASC);
-
-ALTER TABLE `ppy_property`
-ADD INDEX `ix_ppy_property_addr_province` (`addr_province` ASC);
-
-ALTER TABLE `ppy_property`
-ADD INDEX `ix_ppy_property_addr_country_code` (`addr_country_code` ASC);
+ADD INDEX `ix_ppy_property_addr_city` (`addr_country_code` ASC, `addr_city` ASC);
 
 ALTER TABLE `ppy_property`
 ADD INDEX `ix_ppy_property_geo_addr_latitude_geo_addr_longitude` (`geo_addr_latitude` ASC, `geo_addr_longitude` ASC);
+
+ALTER TABLE `ppy_property`
+ADD INDEX `ix_ppy_property_geo_addr_longitude_geo_addr_latitude` (`geo_addr_longitude` ASC, `geo_addr_latitude` ASC);
