@@ -3,6 +3,7 @@ package com.yu.controller;
 import com.yu.exception.InconsistencyDataException;
 import com.yu.exception.RecordInsertionFailException;
 import com.yu.exception.RecordModificationFailException;
+import com.yu.model.dto.CountDto;
 import com.yu.model.property.Property;
 import com.yu.modelMapper.PropertyMapper;
 import com.yu.util.MyBatisUtil;
@@ -30,7 +31,7 @@ public class PropertyController {
     protected PropertyMapper propertyMapper;
 
     private static final long PAGE_SIZE_MIN = 1;
-    private static final long PAGE_SIZE_SAFE_LIMIT = 100;
+    private static final long PAGE_SIZE_SAFE_LIMIT = 1000;
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyController.class);
 
@@ -42,10 +43,18 @@ public class PropertyController {
     @GetMapping("")
     public List<Property> listAllProperty(
             @RequestParam(value = "offset", defaultValue = "0") long offset,
-            @RequestParam(value = "size", defaultValue = "10") long size
+            @RequestParam(value = "size", defaultValue = "10") long size,
+            @RequestParam(value = "isActive", defaultValue = "1") int isActive
     ){
         long safePageSize = Math.max(Math.min(size, PAGE_SIZE_SAFE_LIMIT), PAGE_SIZE_MIN);
-        return this.propertyMapper.listAllProperty(true, offset, safePageSize);
+        return this.propertyMapper.listAllProperty(isActive, offset, safePageSize);
+    }
+
+    @GetMapping("/count")
+    public CountDto countAllProperty(
+            @RequestParam(value = "isActive", defaultValue = "1") int isActive
+    ){
+        return new CountDto(this.propertyMapper.countAllProperty(isActive));
     }
 
     @Transactional

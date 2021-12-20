@@ -10,6 +10,12 @@ types:
     description: date without time, formatted like this `2017-10-24`.
   DateTime:
     description: instant of time without time zone concept.
+  CountDto:
+    examples:
+      simple:
+        {
+          "count": 2000
+        }
   Property:
     type: object
     examples:
@@ -70,6 +76,12 @@ baseUri: http://localhost:8083/api/1.0
     queryParameters:
       offset: integer
       size: integer
+      isActive:
+        type: integer
+        description: |
+          "0" for false,
+          "1" for true,
+          "-1" for anything.
     responses:
       200:
         body:
@@ -87,6 +99,22 @@ baseUri: http://localhost:8083/api/1.0
           application/json:
             description: the newly created Property
             type: Property
+  /count:
+    get:
+      description: |
+        get count of Property.
+      queryParameters:
+        isActive:
+          type: integer
+          description: |
+            "0" for false,
+            "1" for true,
+            "-1" for anything.
+      responses:
+        200:
+          body:
+            application/json:
+              type: CountDto
   /{id}:
     get:
       description: |

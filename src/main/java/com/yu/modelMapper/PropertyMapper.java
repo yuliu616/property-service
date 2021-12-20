@@ -19,10 +19,23 @@ public interface PropertyMapper {
 
     long updatePropertyWithModel(@Param("it") Property property);
 
+    /**
+     * @param isActive "0" for false,
+     *                 "1" for true,
+     *                 "-1" for anything.
+     */
     List<Property> listAllProperty(
-            @Param("isActive") boolean isActive,
+            @Param("isActive") int isActive,
             @Param("pageOffset") long pageOffset,
             @Param("pageSize") long pageSize);
+
+    /**
+     * @param isActive "0" for false,
+     *                 "1" for true,
+     *                 "-1" for anything.
+     */
+    long countAllProperty(
+            @Param("isActive") int isActive);
 
     List<Property> findAllPropertyWithName(
             @Param("name") String name,
