@@ -33,6 +33,13 @@ eureka:
     enabled: false # default = true
     service-url:
       defaultZone: http://eureka:8761/eureka/
+feign:
+  client:
+    config:
+      people-service:
+        logger-level: BASIC
+        request-interceptors:
+          - com.yu.feign.CommonRequestInterceptor
 
 auth-service:
   jwt:
@@ -41,6 +48,11 @@ auth-service:
       MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE+Ft3AzB+xBNaoBOYU0fj3+mAnrM+aYIA
       8MVZV/s28qH6mGcUfrqGnKMu7t+EVmTP0f3RGOd6sO1AnhsqkLzCrQ==
       -----END PUBLIC KEY-----
+people-service:
+  service-name: people-service
+  # leave this blank means use eureka-server to resolve
+  service-url: http://people-service:8082
+  api-base-url: /api/1.1
 
 property-service:
   service-name: property-service

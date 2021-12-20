@@ -1,6 +1,7 @@
 package com.yu.service;
 
 import com.yu.model.people.People;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import java.util.List;
 
+@FeignClient(
+    name = "${people-service.service-name}",
+    url = "${people-service.service-url}"
+)
+@RequestMapping("${people-service.api-base-url}")
 public interface PeopleService {
 
     @GetMapping("/people/{id}")
