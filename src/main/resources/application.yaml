@@ -51,8 +51,7 @@ auth-service:
 people-service:
   service-name: people-service
   # leave this blank means use eureka-server to resolve
-  service-url: http://people-service:8082
-  api-base-url: /api/1.1
+  service-url: http://people-service:8082/api/1.1
 
 property-service:
   service-name: property-service

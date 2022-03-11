@@ -17,7 +17,6 @@ import java.util.List;
     name = "${people-service.service-name}",
     url = "${people-service.service-url}"
 )
-@RequestMapping("${people-service.api-base-url}")
 public interface PeopleService {
 
     @GetMapping("/people/{id}")
